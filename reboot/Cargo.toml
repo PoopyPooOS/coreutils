@@ -1,0 +1,12 @@
+[package]
+name = "reboot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ipc-init = { path = "../../init/ipc-init" }
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
