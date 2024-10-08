@@ -1,0 +1,16 @@
+[package]
+name = "coreutils"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+
+[dependencies]
+nix = { version = "0.29.0", features = ["mount", "reboot"] }
+ipc-init = { path = "../init/ipc-init", version = "0.1.0" }
+clap = { version = "4.5.19", features = ["derive"] }
+terminal_size = "0.4.0"
+colored = "2.1.0"

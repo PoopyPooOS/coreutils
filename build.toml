@@ -1,0 +1,2 @@
+out = "/system/bin/coreutils"
+build_target = "x86_64-unknown-linux-musl"
