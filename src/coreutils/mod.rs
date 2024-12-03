@@ -11,4 +11,4 @@ macro_rules! import_coreutils {
     };
 }
 
-import_coreutils!(cat, clear, cp, echo, ls, ln, mkdir, mount, mv, poweroff, printenv, reboot, rm, sleep, touch);
+import_coreutils!(cat, clear, cp, echo, ls, ln, mkdir, mount, mv, printenv, rm, sleep, touch);

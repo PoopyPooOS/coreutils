@@ -21,7 +21,7 @@ pub fn print_entries(entries: &[fs::DirEntry]) -> io::Result<()> {
 
     let multiline = entries
         .iter()
-        .map(|entry| format!("{}", entry.file_name().to_string_lossy().to_string()))
+        .map(|entry| entry.file_name().to_string_lossy().to_string())
         .collect::<Vec<_>>()
         .join("  ")
         .len()
@@ -35,9 +35,9 @@ pub fn print_entries(entries: &[fs::DirEntry]) -> io::Result<()> {
         let colored_name = colorize_entry(entry);
 
         if multiline {
-            print!("{:<width$}", colored_name, width = max_len);
+            print!("{colored_name:<max_len$}");
         } else {
-            print!("{}  ", colored_name);
+            print!("{colored_name}  ");
         }
     }
     println!();

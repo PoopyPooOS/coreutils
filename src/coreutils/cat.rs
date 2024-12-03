@@ -26,9 +26,7 @@ pub fn cat(args: impl Iterator<Item = String>) -> io::Result<()> {
             println!("{}{}", path.display().to_string().bold().bright_white(), ":".bold().bright_white());
         }
 
-        if !line_numbers {
-            println!("{}", content.trim_end_matches('\n'));
-        } else {
+        if line_numbers {
             let lines: Vec<&str> = content.lines().collect();
             let total_lines = lines.len();
             let line_numbers_width = (if line_numbers { total_lines.to_string().len() } else { 0 }) + 1;
@@ -36,6 +34,8 @@ pub fn cat(args: impl Iterator<Item = String>) -> io::Result<()> {
             for (index, line) in content.lines().enumerate() {
                 println!("{:<width$} {}", index + 1, line, width = line_numbers_width);
             }
+        } else {
+            println!("{}", content.trim_end_matches('\n'));
         }
     }
 

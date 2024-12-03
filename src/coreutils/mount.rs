@@ -21,7 +21,7 @@ pub fn mount(args: impl Iterator<Item = String>) -> io::Result<()> {
     mount::mount(
         Some(&args.source),
         &args.target,
-        Some(CString::new(args.fs_type.unwrap_or("".to_string())).unwrap().as_ref()),
+        Some(CString::new(args.fs_type.unwrap_or(String::new())).unwrap().as_ref()),
         MsFlags::empty(),
         None::<&Path>,
     )

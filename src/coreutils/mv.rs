@@ -22,7 +22,7 @@ pub fn mv(args: impl Iterator<Item = String>) -> io::Result<()> {
         process::exit(1);
     }
 
-    for path in cli.sources.iter() {
+    for path in &cli.sources {
         let dest = if destination.is_dir() {
             let file_name = path.file_name().expect("Failed to get file name");
             destination.join(file_name)

@@ -1,4 +1,5 @@
 #![feature(duration_constructors, iter_intersperse)]
+#![allow(clippy::unnecessary_wraps)]
 
 use std::{env, io, process};
 
@@ -20,9 +21,7 @@ fn main() -> io::Result<()> {
         "mkdir" => coreutils::mkdir(args),
         "mount" => coreutils::mount(args),
         "mv" => coreutils::mv(args),
-        "poweroff" => coreutils::poweroff(args),
         "printenv" => coreutils::printenv(),
-        "reboot" => coreutils::reboot(args),
         "rm" => coreutils::rm(args),
         "sleep" => coreutils::sleep(args),
         "touch" => coreutils::touch(args),
@@ -32,7 +31,7 @@ fn main() -> io::Result<()> {
             process::exit(1);
         }
         _ => {
-            eprintln!("Command not found: {}", exe);
+            eprintln!("Command not found: {exe}");
             process::exit(1);
         }
     }

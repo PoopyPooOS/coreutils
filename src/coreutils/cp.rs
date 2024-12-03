@@ -13,7 +13,7 @@ pub fn cp(args: impl Iterator<Item = String>) -> io::Result<()> {
 
     let destination_is_dir = cli.destination.is_dir();
 
-    for path in cli.sources.iter() {
+    for path in &cli.sources {
         let dest = if destination_is_dir {
             let file_name = path.file_name().unwrap();
             cli.destination.join(file_name)
@@ -23,7 +23,7 @@ pub fn cp(args: impl Iterator<Item = String>) -> io::Result<()> {
 
         match fs::copy(path, &dest) {
             Ok(_) => (),
-            Err(err) => eprintln!("Error: {}", err),
+            Err(err) => eprintln!("Error: {err}"),
         }
     }
 

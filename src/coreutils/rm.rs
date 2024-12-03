@@ -3,6 +3,7 @@ use std::io::{self, Write};
 use std::path::{Path, MAIN_SEPARATOR};
 use std::{fs, process};
 
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Parser, Debug)]
 struct Args {
     #[clap(short, long)]
@@ -24,7 +25,7 @@ pub fn rm(args: impl Iterator<Item = String>) -> io::Result<()> {
     let mut status = 0;
     for file in &args.paths {
         if let Err(e) = remove_file(file, &args) {
-            eprintln!("rm: cannot remove '{}': {}", file, e);
+            eprintln!("rm: cannot remove '{file}': {e}");
             status = 1;
         }
     }
@@ -49,7 +50,7 @@ fn remove_file(path: &str, args: &Args) -> io::Result<()> {
         }
 
         if args.interactive {
-            print!("rm: remove directory '{}' and its contents? ", path);
+            print!("rm: remove directory '{path}' and its contents? ");
             io::stdout().flush()?;
             let mut input = String::new();
             io::stdin().read_line(&mut input)?;
@@ -60,11 +61,11 @@ fn remove_file(path: &str, args: &Args) -> io::Result<()> {
 
         fs::remove_dir_all(path_obj)?;
         if args.verbose {
-            println!("removed directory: '{}'", path);
+            println!("removed directory: '{path}'");
         }
     } else {
         if args.interactive {
-            print!("rm: remove '{}'? ", path);
+            print!("rm: remove '{path}'? ");
             io::stdout().flush()?;
             let mut input = String::new();
             io::stdin().read_line(&mut input)?;
@@ -75,7 +76,7 @@ fn remove_file(path: &str, args: &Args) -> io::Result<()> {
 
         fs::remove_file(path_obj)?;
         if args.verbose {
-            println!("removed '{}'", path);
+            println!("removed '{path}'");
         }
     }
 

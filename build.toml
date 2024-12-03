@@ -1,2 +1,12 @@
 out = "/system/bin/coreutils"
 build_target = "x86_64-unknown-linux-musl"
+post_copy_script = """
+cd "$ROOTFS/system/bin"
+
+# Symlink all the coreutils
+coreutils=(ls cat clear cp echo ln mkdir mount mv printenv rm sleep touch)
+
+for coreutil in "${coreutils[@]}"; do
+    ln -sf coreutils $coreutil
+done
+"""
