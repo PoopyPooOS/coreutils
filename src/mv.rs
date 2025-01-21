@@ -1,5 +1,5 @@
 use clap::Parser;
-use std::{fs, io, path::PathBuf, process, sync::Arc};
+use std::{fs, io, path::PathBuf};
 
 #[derive(Debug, Parser)]
 struct Cli {
@@ -11,15 +11,14 @@ struct Cli {
 
 pub fn mv(args: impl Iterator<Item = String>) -> io::Result<()> {
     let cli = Cli::parse_from(args);
-    let destination = Arc::new(cli.destination);
+    let destination = cli.destination;
 
     if destination.exists() {
-        eprintln!(
-            "mv: cannot move '{}' to '{}': File exists",
+        panic!(
+            "Cannot move '{}' to '{}', a file already exists at the destination",
             cli.sources[0].display(),
             destination.display()
         );
-        process::exit(1);
     }
 
     for path in &cli.sources {
@@ -27,10 +26,10 @@ pub fn mv(args: impl Iterator<Item = String>) -> io::Result<()> {
             let file_name = path.file_name().expect("Failed to get file name");
             destination.join(file_name)
         } else {
-            destination.to_path_buf()
+            destination.clone()
         };
 
-        fs::rename(path, &dest)?;
+        fs::rename(path, &dest).expect("Failed to move file");
     }
 
     Ok(())

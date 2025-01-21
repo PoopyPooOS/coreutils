@@ -1,7 +1,10 @@
 use clap::Parser;
-use std::io::{self, Write};
-use std::path::{Path, MAIN_SEPARATOR};
-use std::{fs, process};
+use logger::info;
+use std::{
+    fs,
+    io::{self, Write},
+    path::{Path, MAIN_SEPARATOR},
+};
 
 #[allow(clippy::struct_excessive_bools)]
 #[derive(Parser, Debug)]
@@ -13,24 +16,21 @@ struct Args {
     #[clap(short = 'r', long)]
     recursive: bool,
     #[clap(long)]
-    no_preserve_root: bool,
+    delete_root: bool,
     #[clap(long)]
     verbose: bool,
+
     paths: Vec<String>,
 }
 
 pub fn rm(args: impl Iterator<Item = String>) -> io::Result<()> {
     let args = Args::parse_from(args);
 
-    let mut status = 0;
     for file in &args.paths {
-        if let Err(e) = remove_file(file, &args) {
-            eprintln!("rm: cannot remove '{file}': {e}");
-            status = 1;
-        }
+        remove_file(file, &args).expect("Failed to remove file");
     }
 
-    process::exit(status);
+    Ok(())
 }
 
 fn remove_file(path: &str, args: &Args) -> io::Result<()> {
@@ -43,14 +43,12 @@ fn remove_file(path: &str, args: &Args) -> io::Result<()> {
     };
 
     if metadata.is_dir() && args.recursive {
-        if !args.no_preserve_root && path_obj == Path::new(&MAIN_SEPARATOR.to_string()) {
-            eprintln!("rm: it is dangerous to operate recursively on '/'");
-            eprintln!("rm: use --no-preserve-root to override this failsafe");
-            process::exit(1);
+        if !args.delete_root && path_obj == Path::new(&MAIN_SEPARATOR.to_string()) {
+            panic!("It is dangerous to operate recursively on root. Use `--delete-root` to ignore this warning");
         }
 
         if args.interactive {
-            print!("rm: remove directory '{path}' and its contents? ");
+            print!("Remove directory '{path}' and its contents? ");
             io::stdout().flush()?;
             let mut input = String::new();
             io::stdin().read_line(&mut input)?;
@@ -59,13 +57,13 @@ fn remove_file(path: &str, args: &Args) -> io::Result<()> {
             }
         }
 
-        fs::remove_dir_all(path_obj)?;
+        fs::remove_dir_all(path_obj).expect("Failed to remove directory");
         if args.verbose {
-            println!("removed directory: '{path}'");
+            info!(format!("Removed directory: '{path}'"));
         }
     } else {
         if args.interactive {
-            print!("rm: remove '{path}'? ");
+            print!("Remove '{path}'? ");
             io::stdout().flush()?;
             let mut input = String::new();
             io::stdin().read_line(&mut input)?;
@@ -74,9 +72,9 @@ fn remove_file(path: &str, args: &Args) -> io::Result<()> {
             }
         }
 
-        fs::remove_file(path_obj)?;
+        fs::remove_file(path_obj).expect("Failed to remove file");
         if args.verbose {
-            println!("removed '{path}'");
+            info!(format!("Removed '{path}'"));
         }
     }
 

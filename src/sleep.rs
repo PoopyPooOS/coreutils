@@ -1,6 +1,5 @@
-use std::{io, thread, time::Duration};
-
 use clap::Parser;
+use std::{io, thread, time::Duration};
 
 #[derive(Debug)]
 enum TimeUnit {
@@ -27,14 +26,17 @@ pub fn sleep(args: impl Iterator<Item = String>) -> io::Result<()> {
         _ => TimeUnit::Second,
     };
 
-    let unit_num = time.trim_matches(|c: char| !c.is_ascii_digit()).parse().unwrap();
+    let length = time
+        .trim_matches(|c: char| !c.is_ascii_digit())
+        .parse()
+        .expect("Failed to parse time length");
 
-    match (unit_num, unit) {
-        (s, TimeUnit::Second) => thread::sleep(Duration::from_secs(s)),
-        (s, TimeUnit::Minute) => thread::sleep(Duration::from_mins(s)),
-        (s, TimeUnit::Hour) => thread::sleep(Duration::from_hours(s)),
-        (s, TimeUnit::Day) => thread::sleep(Duration::from_days(s)),
-    }
+    thread::sleep(match (length, unit) {
+        (s, TimeUnit::Second) => Duration::from_secs(s),
+        (s, TimeUnit::Minute) => Duration::from_mins(s),
+        (s, TimeUnit::Hour) => Duration::from_hours(s),
+        (s, TimeUnit::Day) => Duration::from_days(s),
+    });
 
     Ok(())
 }

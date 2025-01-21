@@ -1,7 +1,7 @@
-mod formatting;
-
 use clap::Parser;
 use std::{fs, io, path::PathBuf};
+
+mod formatting;
 
 #[derive(Debug, Parser)]
 struct Cli {
@@ -26,7 +26,11 @@ pub fn ls(args: impl Iterator<Item = String>) -> io::Result<()> {
                 if cli.all {
                     true
                 } else {
-                    !entry.file_name().to_string_lossy().to_string().starts_with('.')
+                    !entry
+                        .file_name()
+                        .to_string_lossy()
+                        .to_string()
+                        .starts_with('.')
                 }
             })
             .collect::<Vec<_>>();

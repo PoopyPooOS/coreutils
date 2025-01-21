@@ -4,9 +4,9 @@ multi call binary:
  - 748K glibc dynamic
 
 ## ls
-- make better use of horizontal space:
+- Make better use of horizontal space:
 ```
-this ls:2
+this ls:
 build  cat  clear  coreutils  coreutils.d  cp  deps  echo  examples  incremental  ln  
 ls  mkdir  mount  mv  printenv  rm  sleep  touch  
 
@@ -15,7 +15,7 @@ build  cat  clear  coreutils  coreutils.d  cp  deps  echo  examples  incremental
 ```
 
 ## cat
-- format line numbers better:
+- Format line numbers better:
 ```
 8     #[arg(short, long)]
 9     line_numbers: bool,
@@ -29,10 +29,10 @@ should be
 10     #[arg(required = true)]
 11     paths: Vec<PathBuf>,
 ```
+- Use 
 
 ## cp
-- support directories, probably with walkdir or some other library.
-- When tryingt to copy directories without the -r/--recursive flag output a better error message
+- Support directories, probably with walkdir or some other library.
 
 ## sleep
-- add supports for floats
+- Add supports for floats

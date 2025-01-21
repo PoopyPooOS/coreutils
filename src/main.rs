@@ -1,5 +1,5 @@
 #![feature(duration_constructors, iter_intersperse)]
-#![allow(clippy::unnecessary_wraps)]
+#![allow(clippy::unnecessary_wraps, clippy::manual_assert)]
 
 use coreutils_macro::coreutils;
 
