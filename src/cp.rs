@@ -21,10 +21,12 @@ pub fn cp(args: impl Iterator<Item = String>) -> io::Result<()> {
             cli.destination.clone()
         };
 
-        match fs::copy(path, &dest) {
-            Ok(_) => (),
-            Err(err) => eprintln!("Error: {err}"),
-        }
+        fs::copy(path, dest).unwrap_or_else(|_| {
+            panic!(
+                "Failed to copy file{}",
+                if cli.sources.len() > 1 { "s" } else { "" }
+            )
+        });
     }
 
     Ok(())
