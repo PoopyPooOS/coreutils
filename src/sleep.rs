@@ -19,10 +19,10 @@ pub fn sleep(args: impl Iterator<Item = String>) -> io::Result<()> {
     let Cli { time } = Cli::parse_from(args);
 
     let unit = match time {
-        _ if time.ends_with('s') => TimeUnit::Second,
-        _ if time.ends_with('m') => TimeUnit::Minute,
-        _ if time.ends_with('h') => TimeUnit::Hour,
-        _ if time.ends_with('d') => TimeUnit::Day,
+        _ if time.ends_with('s') | time.ends_with("sec") => TimeUnit::Second,
+        _ if time.ends_with('m') | time.ends_with("min") => TimeUnit::Minute,
+        _ if time.ends_with('h') | time.ends_with("hour") | time.ends_with("hr") => TimeUnit::Hour,
+        _ if time.ends_with('d') | time.ends_with("days") => TimeUnit::Day,
         _ => TimeUnit::Second,
     };
 
