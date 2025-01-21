@@ -6,7 +6,11 @@ use terminal_size::{terminal_size, Width};
 
 pub fn print_entries(entries: &[fs::DirEntry]) -> io::Result<()> {
     let size = terminal_size();
-    let width = if let Some((Width(w), _)) = size { w as usize } else { 80 };
+    let width = if let Some((Width(w), _)) = size {
+        w as usize
+    } else {
+        80
+    };
 
     let mut max_len = 0;
     for entry in entries {
@@ -46,7 +50,10 @@ pub fn print_entries(entries: &[fs::DirEntry]) -> io::Result<()> {
 }
 
 pub fn colorize_entry(entry: &fs::DirEntry) -> ColoredString {
-    let file_name = entry.file_name().into_string().unwrap();
+    let file_name = entry
+        .file_name()
+        .into_string()
+        .expect("Failed to convert file name to string");
 
     match entry.file_type() {
         Ok(file_type) if file_type.is_dir() => file_name.blue().bold(),

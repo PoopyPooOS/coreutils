@@ -14,11 +14,17 @@ pub fn coreutils(input: TokenStream) -> TokenStream {
         let ident = &command.ident;
         if command.has_args {
             quote! {
-                stringify!(#ident) => #ident::#ident(args),
+                stringify!(#ident) => {
+                    logger::set_app_name!(stringify!(#ident));
+                    #ident::#ident(args)
+                },
             }
         } else {
             quote! {
-                stringify!(#ident) => #ident::#ident(),
+                stringify!(#ident) => {
+                    logger::set_app_name!(stringify!(#ident));
+                    #ident::#ident()
+                },
             }
         }
     });
@@ -40,6 +46,8 @@ pub fn coreutils(input: TokenStream) -> TokenStream {
         use std::{env, io, process};
 
         fn main() -> io::Result<()> {
+            logger::panic::set_panic_hook();
+
             let exe = env::args().next().expect("Failed to get executable name");
             let exe = exe
                 .split('/')
