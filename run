@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Build the project, make a symlink to the coreutils and use the symlink. 
+
+if [ $# -lt 1 ]; then
+  echo "Usage: run <coreutil_name> [args...]"
+  exit 1
+fi
+
+symlink_name="$1"
+shift
+
+cargo b -r -p coreutils || { echo "Build failed"; exit 1; }
+
+coreutils_path="$(realpath ../../target/release/coreutils)"
+
+if [ ! -f "$coreutils_path" ]; then
+  echo "Error: $coreutils_path not found. Ensure your build produces this binary."
+  exit 1
+fi
+
+ln -sf "$coreutils_path" "/tmp/$symlink_name" || { echo "Failed to create symlink"; exit 1; }
+
+"/tmp/$symlink_name" "$@"

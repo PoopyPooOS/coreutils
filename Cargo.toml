@@ -1,0 +1,13 @@
+[package]
+name = "coreutils"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rustix = { workspace = true, features = ["mount"] }
+clap = { workspace = true }
+terminal_size = { workspace = true }
+colored = { workspace = true }
+
+logger = { workspace = true }
+coreutils-macro = { path = "./coreutils-macro" }
